@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ex5.html</title>
+</head>
+<body>
+    
+<script>
+
+const check = () => {
+const pageNum = document.querySelector('.pageNum').value;
+const limit = document.querySelector('.limit').value;
+
+document.querySelector('div').innerHTML = '';
+document.getElementsByClassName('text')[0].textContent = '';
+
+if (pageNum >= 1 && pageNum <= 10) {
+
+    if (limit >= 1 && limit <= 10) {
+
+            localStorage.setItem('pageNum', pageNum);
+            localStorage.setItem('limit', limit);
+
+            const localPageNum = localStorage.getItem('pageNum');
+            const localLimit = localStorage.getItem('limit');
+
+            const xhr = new XMLHttpRequest();
+            xhr.open("get", `https://jsonplaceholder.typicode.com/photos?_page=${localPageNum}&_limit=${localLimit}`, true);
+            xhr.onload = () => {
+
+            let responses = JSON.parse(xhr.response);
+            for (i=0;i<localLimit;i++) {
+                console.log(responses[i].thumbnailUrl);
+                document.querySelector('div').innerHTML += `<img src="${responses[i].thumbnailUrl}"></img>`
+            }
+            
+        };
+        xhr.send();
+    }
+
+    else {
+        document.getElementsByClassName('text')[0].textContent = 'Лимит вне диапазона от 1 до 10'
+    }
+}
+
+else {
+
+    if (limit >= 1 && limit <= 10) {
+        document.getElementsByClassName('text')[0].textContent = 'Номер страницы вне диапазона от 1 до 10'
+    }
+
+    else {
+        document.getElementsByClassName('text')[0].textContent = 'Номер страницы и лимит вне диапазона от 1 до 10'
+    }
+}
+
+}
+
+window.onload = () => {
+
+    const localPageNum = localStorage.getItem('pageNum');
+    const localLimit = localStorage.getItem('limit');
+
+    const xhr = new XMLHttpRequest();
+            xhr.open("get", `https://jsonplaceholder.typicode.com/photos?_page=${localPageNum}&_limit=${localLimit}`, true);
+            xhr.onload = () => {
+
+            let responses = JSON.parse(xhr.response);
+            for (i=0;i<localLimit;i++) {
+                console.log(responses[i].thumbnailUrl);
+                document.querySelector('div').innerHTML += `<img src="${responses[i].thumbnailUrl}"></img>`
+            }
+            
+        };
+        xhr.send();
+}
+</script>
+
+
+<input class="pageNum" type="text"></input>
+
+<br>
+<br>
+
+<input class="limit" type="text"></input>
+
+<br>
+<br>
+
+<button onClick="check()">Запрос</button>
+
+<p class="text"></p>
+<br>
+<br>
+<div></div>
+</body>
+</html>
